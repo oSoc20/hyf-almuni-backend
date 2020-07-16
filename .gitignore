@@ -1,0 +1,10 @@
+# dependencies
+/node_modules
+/.env
+
+# testing
+/coverage
+reports/
+
+# production
+/build
