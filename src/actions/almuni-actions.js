@@ -1,33 +1,66 @@
-const Alumni = require('../models/almuni');
+const Alumni = require('../models/alumni');
+const utils = require('../lib/utils');
 
+// get all alumni
 const getAlumni = async (req, res) => {
   try {
-    const alumni = await Alumni.find();
-    res.json(alumni)
+    const alumni = await Alumni.find({});
+    res.status(200).json({ success: true, alumni})
   } catch (error) {
-    res.status(400).json({
-      message: error.message
-    })
+    res.status(400).json({ success: false, message: error.message })
   }
 };
 
-const createAlumni = async (req, res) => {
-  const alumni = new Alumni({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+const registerAlumni = async (req, res) => {
+  const saltHash = utils.genPassword(req.body.password);
+
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
+
+  const newAlumni = new Alumni({
+    name: req.body.name,
+    surname: req.body.surname,
+    email: req.body.email,
+    hash: hash,
+    salt: salt
   })
 
   try {
-    const newAlumni = await alumni.save();
-    res.status(201).json(newAlumni);
+    const alumni = await newAlumni.save();
+    const jwt = utils.issueJWT(alumni)
+    res.status(201).json({ success: true, almuni: alumni, token: jwt.token, expiresIn: jwt.expires
+    });
   } catch (error) {
-    res.status(400).json({
-      message: error.message
-    })
+    res.status(400).json({ success: false, message: error.message })
   }
 };
 
+// login alumni
+const loginAlumni = async (req, res)=>{
+try {
+  const alumni = await Alumni.findOne({ email: req.body.email })
+  
+  if(!alumni) {
+    res.status(401).json({ success: false, message: 'could not found an almuni with this email address'})
+  }
+
+  // checking if it is a valid user
+  const isValid = utils.validPassword(req.body.password, alumni.hash, alumni.salt)
+
+  if(isValid){
+    const tokenObject = utils.issueJWT(alumni);
+    res.status(201).json({ success: true, alumni, token: tokenObject.token, expiresIn: tokenObject.expires})
+  } else {
+    res.status(401).json({ success: false, message: 'you entered invalid email or password'})
+  }
+} catch (error) {
+  res.status(400).json({ success: false, message: error.message })
+}
+
+};
+
 module.exports = {
-  getAlumni,
-  createAlumni
+  loginAlumni,
+  registerAlumni,
+  getAlumni
 };
