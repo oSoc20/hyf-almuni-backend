@@ -1,5 +1,5 @@
 # hyf-almuni-backend
-RESTful API created with express and mongoose for the [frontend] (https://github.com/oSoc20/hyf-alumni)
+RESTful API created with express and mongoose for the [frontend](https://github.com/oSoc20/hyf-alumni)
 
 ## Installation
 

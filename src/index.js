@@ -1,21 +1,29 @@
 const express = require('express');
 const cors = require('cors')
-const Db = require('./db')
+const passport = require('passport');
+const Db = require('./db');
+const genKeyPair = require('./generateKeypair');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// generate public and private key
+genKeyPair()
 
 const PORT = process.env.PORT || 8080;
 
-const ALMUNI = `almuni`
+const ALMUNI = `alumni`
 const COMPANY = 'company';
 
+// Alumni-CRUD actions
 const
-  { getAlumni,
-    createAlumni,
+  { registerAlumni,
+    loginAlumni,
+    getAlumni,
+    deleteAlumni
   } = require('./actions/almuni-actions');
 
+// Company-CRUD actions
 const {
   getCompany,
   createCompany,
@@ -25,13 +33,35 @@ app.get('/', (req, res)=>{
     res.send('Server is Up and runnig')
 })
 
-// Company-CRUD actions
+
+
+//Pass the global passport object into the configuaration function
+require('./middleware/passport')(passport);
+
+// This will initalize the passport object on every request
+app.use(passport.initialize())
+
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
+
+app.get('/protected' , passport.authenticate('jwt', {session: false}),(req, res, next) => {
+  res.status(200).json({
+      success: true,
+      msg: 'you are authorized'
+  })
+});
+// alumni routes 
+app.post(`/${ALMUNI}/register`, registerAlumni);
+app.post(`/${ALMUNI}/login`, loginAlumni);
+app.get(`/${ALMUNI}`, passport.authenticate('jwt', {session: false}), getAlumni);
+
+app.delete(`/${ALMUNI}`, passport.authenticate('jwt', {session: false}), deleteAlumni);
+
+// company routes
 app.post(`/${COMPANY}`, createCompany);
 app.get(`/${COMPANY}`, getCompany);
 
-// Alumni-CRUD actions
-app.post(`/${ALMUNI}`, createAlumni);
-app.get(`/${ALMUNI}`, getAlumni);
+
 
 // perhaps expose some API metadata at the root
 app.get('/hello', (req, res) => {
