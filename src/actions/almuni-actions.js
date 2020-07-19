@@ -10,7 +10,17 @@ const getAlumni = async (req, res) => {
     res.status(400).json({ success: false, message: error.message })
   }
 };
-
+// delete all alumni records
+const deleteAlumni = async (req, res)=>{
+  try {
+    await Alumni.deleteMany()
+    res.status(204).json({
+      message: 'all alumni data are deleted succesfully'
+    })
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
 const registerAlumni = async (req, res) => {
   const saltHash = utils.genPassword(req.body.password);
 
@@ -62,5 +72,6 @@ try {
 module.exports = {
   loginAlumni,
   registerAlumni,
-  getAlumni
+  getAlumni,
+  deleteAlumni
 };

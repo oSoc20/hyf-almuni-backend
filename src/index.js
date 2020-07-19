@@ -19,7 +19,8 @@ const COMPANY = 'company';
 const
   { registerAlumni,
     loginAlumni,
-    getAlumni
+    getAlumni,
+    deleteAlumni
   } = require('./actions/almuni-actions');
 
 // Company-CRUD actions
@@ -53,6 +54,8 @@ app.get('/protected' , passport.authenticate('jwt', {session: false}),(req, res,
 app.post(`/${ALMUNI}/register`, registerAlumni);
 app.post(`/${ALMUNI}/login`, loginAlumni);
 app.get(`/${ALMUNI}`, passport.authenticate('jwt', {session: false}), getAlumni);
+
+app.delete(`/${ALMUNI}`, passport.authenticate('jwt', {session: false}), deleteAlumni);
 
 // company routes
 app.post(`/${COMPANY}`, createCompany);

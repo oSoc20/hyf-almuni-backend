@@ -9,6 +9,6 @@ const DB_USER = process.env.DB_USER;
 const uri = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.toxef.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
 
 const db = mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(db => console.log('Db Connected'))
   .catch(err => console.log(err));
