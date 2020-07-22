@@ -22,6 +22,9 @@ genKeyPair()
 //Routes
 app.use('/alumni', alumnus)
 app.use('/skill',passport.authenticate('jwt', {session: false}), skills)
+app.get('/', (req, res, next)=>{
+  res.send('Server is Up and runnig')
+})
 
 //Pass the global passport object into the configuaration function
 require('./middleware/passport')(passport);
@@ -51,9 +54,5 @@ app.use((err, req, res, next)=> {
 })
 
 const PORT = process.env.PORT || 8080;
-
-app.get('/', (req, res)=>{
-    res.send('Server is Up and runnig')
-})
 
 app.listen(PORT, ()=> console.log(`Server runnig on port ${PORT}`))
