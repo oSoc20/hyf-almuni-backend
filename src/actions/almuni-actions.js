@@ -1,8 +1,11 @@
 const Alumni = require('../models/alumni');
 const utils = require('../lib/utils');
+const Skill = require('../models/skill');
+const users = require('../../../osoc-bootcamp/excerises/APIproject/controllers/users');
+const Car = require('../../../osoc-bootcamp/excerises/APIproject/models/car');
 
 // get all alumni
-const getAlumni = async (req, res) => {
+const getAllAlumni = async (req, res) => {
   try {
     const alumni = await Alumni.find({});
     res.status(200).json({ success: true, alumni})
@@ -10,6 +13,31 @@ const getAlumni = async (req, res) => {
     res.status(400).json({ success: false, message: error.message })
   }
 };
+
+//get a single alumni
+const getAlumni = async(req, res)=>{
+  try {
+    const { alumniId } = req.params;
+    const alumni = await Alumni.findById(alumniId)
+    res.status(200).json({success: true, alumni})
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+// update an alumni
+const updateAlumni = async(req, res)=>{
+  try {
+    const { alumniId } = req.params;
+    const newAlumni = req.body;
+    await Alumni.findByIdAndUpdate(alumniId, newAlumni )
+    res.status(200).json({success: true})
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+
+  }
+}
+
 // delete all alumni records
 const deleteAlumni = async (req, res)=>{
   try {
@@ -69,9 +97,143 @@ try {
 
 };
 
+// =====================Alumni-skills=============================//
+
+// create a new skill for a paricular alumni
+const createAlumniSkill = async(req, res)=>{
+  try {
+    const { alumniId } = req.params;
+    // crate new skill
+    const newSkill = new Skill(req.body);
+    //get alumni
+    const alumni = await Alumni.findById(alumniId);
+    // assign an alumni the new skill
+    newSkill.student = alumni;
+    // save the skill
+    await newSkill.save();
+    // Add skill to the alumni skills array
+    alumni.skills.push(newSkill)
+    // save the user
+    await alumni.save()
+    res.status(201).json(newSkill)
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+// get Alumi skills
+const getAlumniSkills = async(req, res)=>{
+  try {
+    const { alumniId } = req.params;
+    const alumni = await Alumni.findById(alumniId).populate('skills')
+    res.status(200).json(alumni)
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+// get skills
+const getSkills = async(req,res)=>{
+  try {
+    const skills = await Skill.find({})
+    res.status(200).json({success: true, skills})
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+const createSkill = async(req, res)=>{
+  try {
+    //1.find the acutal student(alumni)
+    const student = await Alumni.findById(req.body.student);
+    // 2. create a new skill
+    const newSkill = req.body
+    console.log(newSkill)
+    
+    // we don't need the req.body.student becouse it's main purpuse is to find the alumni
+    delete newSkill.student
+    const skill = new Skill(newSkill)
+    skill.student = student;
+    await skill.save();
+    // 3. add the newly created skill to the acutal student(alumni)
+    student.skills.push(skill)
+    await student.save()
+    // done :)
+    res.status(201).json(skill)
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+const getSkill = async (req, res)=>{
+  try {
+    const {skillId} = req.params;
+    const skill = await Skill.findById(skillId)
+    res.status(200).json({success:true, skill})
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+
+const updateSkill = async (req, res)=>{
+  try {
+    
+    const {skillId} = req.params;
+  
+    const newSkill = req.body;
+    const result = await Skill.findByIdAndUpdate(skillId, newSkill)
+    res.status(200).json({success:true})
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+
+};
+
+const deleteSkill = async(req,res)=>{
+  try {
+    const {skillId} = req.params;
+  
+    // get a skill
+    const skill = await Skill.findById(skillId);
+    console.log(skill)
+
+    if(!skill) {
+     return res.status(404).json({
+        success:false,
+        error: `skill doesn't exist`
+      })
+    }
+    const studentId = skill.student
+    // get a studnet(alumni)
+    const alumni = await Alumni.findById(studentId);
+  
+    // remove the skill
+    await skill.remove()
+  
+    // remove the skill from the alumni list
+    alumni.skills.pull(skill)
+    
+    await alumni.save()
+    res.status(200).json({success:true})
+
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message })
+  }
+}
+// ========================================================//==========
+
 module.exports = {
   loginAlumni,
   registerAlumni,
   getAlumni,
-  deleteAlumni
+  getAllAlumni,
+  updateAlumni,
+  deleteAlumni,
+  createAlumniSkill,
+  getAlumniSkills,
+  getSkills,
+  createSkill,
+  getSkill,
+  updateSkill,
+  deleteSkill
 };
