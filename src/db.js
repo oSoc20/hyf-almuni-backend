@@ -6,7 +6,8 @@ const DB_NAME = process.env.DB_NAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_USER = process.env.DB_USER;
 
-const uri = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.toxef.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
+// const uri = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.toxef.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
+const uri = `mongodb://localhost/hyfAlumni`
 
 const db = mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
