@@ -12,7 +12,7 @@ const  alumniSchema= new Schema({
   userType: { type: String, default:'alumni' },
   isActive: { type: Boolean, default:true },
   registeredDate: { type: Date, required: true, default : Date.now },
-  updatedDate: { type: Date, required: true, default : Date.now },
+  updatedDate: { type: Date, required: true },
   about: String,
   jobTitle: { type: String, enum : ['frontend','backend','fullstack', 'designer'], default: 'frontend' },
   languages: [{
