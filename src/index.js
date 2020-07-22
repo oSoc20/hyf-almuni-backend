@@ -6,6 +6,8 @@ const genKeyPair = require('./generateKeypair');
 const logger = require('morgan')
 
 const app = express();
+// generate public and private key
+genKeyPair()
 
 const alumnus = require('./routes/alumunus')
 const skills = require('./routes/skills')
@@ -16,8 +18,6 @@ app.use(logger('dev'))
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-// generate public and private key
-genKeyPair()
 
 //Routes
 app.use('/alumni', alumnus)
