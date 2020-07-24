@@ -9,16 +9,16 @@ require('../middleware/passport')(passport);
 const auth = passport.authenticate('jwt', {session: false})
 
 router.route('/')
-      .get(auth, AlumniControllers.index)
+      .get( AlumniControllers.index)
 router.route('/register')
       .post(AlumniControllers.registerAlumni)
 router.route('/login')
       .post(AlumniControllers.loginAlumni)
 router.route('/:alumniId')
-      .get(auth, AlumniControllers.getAlumni)
-      .patch(auth, AlumniControllers.updateAlumni)
-router.route('/:alumniId/skill')
-      .post(auth, AlumniControllers.createAlumniSkill)
-      .get(auth, AlumniControllers.getAlumniSkills)
+      .get( AlumniControllers.getAlumni)
+      .patch( AlumniControllers.updateAlumni)
+// router.route('/:alumniId/skill')
+//       .post( AlumniControllers.createAlumniSkill)
+//       .get( AlumniControllers.getAlumniSkills)
 
 module.exports = router;

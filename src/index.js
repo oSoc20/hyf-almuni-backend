@@ -13,6 +13,7 @@ const alumnus = require('./routes/alumunus')
 const skills = require('./routes/skills')
 const languages = require('./routes/lanugages')
 const media = require('./routes/media')
+const company = require('./routes/companies');
 
 // middlewares
 app.use(express.json());
@@ -20,12 +21,13 @@ app.use(logger('dev'))
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-
+const auth = passport.authenticate('jwt', {session: false})
 //Routes
 app.use('/alumni', alumnus)
-app.use('/skill',passport.authenticate('jwt', {session: false}), skills)
-app.use('/language',passport.authenticate('jwt', {session: false}), languages)
-app.use('/media',passport.authenticate('jwt', {session: false}), media)
+app.use('/skill', skills)
+app.use('/language', languages)
+app.use('/media', media)
+app.use('/company', company)
 
 app.get('/', (req, res, next)=>{
   res.send('Server is Up and runnig')

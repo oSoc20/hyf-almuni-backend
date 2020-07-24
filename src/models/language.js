@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const languageSchema = new Schema({
-    language: String, 
-    rate: Number,
+    language: { type: String, required: true},
+    rate: { type: String, required: true, default: null},
     student: {
         type:Schema.Types.ObjectId,
-        ref:'alumni'
+        ref:'alumni',
+        required:true
     }
 });
 

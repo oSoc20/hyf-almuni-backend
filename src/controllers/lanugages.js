@@ -11,11 +11,11 @@ module.exports = {
         //1.find the acutal student(alumni)
         const student = await Alumni.findById(req.body.student);
         // 2. create a new language
-        const newLanguage = req.body
+        // const newLanguage = req.body
         // we don't need the req.body.student becouse it's main purpuse is to find the alumni
-        delete newLanguage.student
-        const language = new Language(newLanguage)
-        language.student = student;
+        // delete newLanguage.student
+        const language = new Language(req.body)
+        // language.student = student;
         await language.save();
         // 3. add the newly created language to the acutal student(alumni)
         student.languages.push(language)
