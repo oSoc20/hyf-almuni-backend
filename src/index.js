@@ -25,7 +25,7 @@ app.use(cors());
 app.use('/alumni', alumnus)
 app.use('/skill',passport.authenticate('jwt', {session: false}), skills)
 app.use('/language',passport.authenticate('jwt', {session: false}), languages)
-app.use('/media', media)
+app.use('/media',passport.authenticate('jwt', {session: false}), media)
 
 app.get('/', (req, res, next)=>{
   res.send('Server is Up and runnig')
