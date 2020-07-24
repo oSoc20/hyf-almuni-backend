@@ -10,5 +10,5 @@ const mediaSchema = new Schema({
     }
 });
 
-const Media = mongoose.model('language', mediaSchema);
+const Media = mongoose.model('media', mediaSchema);
 module.exports = Media; 

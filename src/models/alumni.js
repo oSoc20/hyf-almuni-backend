@@ -8,12 +8,12 @@ const  alumniSchema= new Schema({
   hash: String,
   salt: String,
   cv:String,
+  about: String,
   profileImage:String,
   userType: { type: String, default:'alumni' },
   isActive: { type: Boolean, default:true },
   registeredDate: { type: Date, required: true, default : Date.now },
   updatedDate: { type: Date },
-  about: String,
   jobTitle: { type: String, enum : ['frontend','backend','fullstack', 'designer'], default: 'frontend' },
   languages: [{
     type:Schema.Types.ObjectId,

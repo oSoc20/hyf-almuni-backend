@@ -1,6 +1,7 @@
 const Alumni = require('../models/alumni');
 const utils = require('../lib/utils')
 const Skill = require('../models/skill')
+const Language = require('../models/language')
 
 module.exports = {
     index: async (req, res, next)=>{
@@ -28,7 +29,7 @@ module.exports = {
     loginAlumni: async (req, res, next)=>{
         const alumni = await Alumni.findOne({ email: req.body.email })  
         if(!alumni) {
-            res.status(401).json({ success: false, message: 'could not found an almuni with this email address'})
+           return res.status(401).json({ success: false, message: 'could not found an almuni with this email address'})
         }
         // checking if it is a valid user
         const isValid = utils.validPassword(req.body.password, alumni.hash, alumni.salt)
@@ -52,7 +53,7 @@ module.exports = {
         await Alumni.findByIdAndUpdate(alumniId, newAlumni )
         res.status(200).json({success: true})
     },
-
+//==================skill==================//
     createAlumniSkill: async(req, res, next)=>{
         const { alumniId } = req.params;
         // crate new skill
@@ -65,7 +66,7 @@ module.exports = {
         await newSkill.save();
         // Add skill to the alumni skills array
         alumni.skills.push(newSkill)
-        // save the user
+        // save the alumni
         await alumni.save()
         res.status(201).json(newSkill)
     },
@@ -74,5 +75,29 @@ module.exports = {
         const { alumniId } = req.params;
         const alumni = await Alumni.findById(alumniId).populate('skills')
         res.status(200).json(alumni.skills)
+    },
+
+    //================language======================================//
+    createAlumniLanguage: async(req, res, next)=>{
+        const { alumniId } = req.params;
+        // crate new language
+        const newLanguage = new Language(req.body);
+        //get alumni
+        const alumni = await Alumni.findById(alumniId);
+        // assign an alumni the new language
+        newLanguage.student = alumni;
+        // save the language
+        await newLanguage.save();
+        // Add the language to the alumni languages array
+        alumni.languages.push(newLanguage)
+        // save the alumni
+        await alumni.save()
+        res.status(201).json(newLanguage)
+    },
+
+    getAlumniLanguages: async(req, res, next)=>{
+        const { alumniId } = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('languages')
+        res.status(200).json(alumni.languages)
     }
 }
