@@ -71,11 +71,11 @@ module.exports = {
     //     res.status(201).json(newSkill)
     // },
 
-    // getAlumniSkills: async(req, res, next)=>{
-    //     const { alumniId } = req.params;
-    //     const alumni = await Alumni.findById(alumniId).populate('skills')
-    //     res.status(200).json(alumni.skills)
-    // },
+    getAlumniSkills: async(req, res, next)=>{
+        const { alumniId } = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('skills')
+        res.status(200).json(alumni.skills)
+    },
 
     // //================language======================================//
     // createAlumniLanguage: async(req, res, next)=>{
@@ -95,9 +95,16 @@ module.exports = {
     //     res.status(201).json(newLanguage)
     // },
 
-    // getAlumniLanguages: async(req, res, next)=>{
-    //     const { alumniId } = req.params;
-    //     const alumni = await Alumni.findById(alumniId).populate('languages')
-    //     res.status(200).json(alumni.languages)
-    // }
+    getAlumniLanguages: async(req, res, next)=>{
+        const { alumniId } = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('languages')
+        res.status(200).json(alumni.languages)
+    },
+
+    //================================media====================//
+    getAlumniMedia: async (req, res) => {
+        const {alumniId} = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('media')
+        res.status(200).json(alumni.media)
+    }
 }
