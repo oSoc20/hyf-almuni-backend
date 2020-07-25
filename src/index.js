@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors')
-const passport = require('passport');
 const Db = require('./db');
 const genKeyPair = require('./generateKeypair');
 const logger = require('morgan')
+const alumniPassport = require('passport');
+const companyPassport = require('passport');
 
 const app = express();
 // generate public and private key
@@ -21,12 +22,12 @@ app.use(logger('dev'))
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-const auth = passport.authenticate('jwt', {session: false})
+const auth = alumniPassport.authenticate('alumni-rule', {session: false})
 //Routes
 app.use('/alumni', alumnus)
-app.use('/skill', skills)
-app.use('/language', languages)
-app.use('/media', media)
+app.use('/skill',auth, skills)
+app.use('/language',auth, languages)
+app.use('/media', auth,media)
 app.use('/company', company)
 
 app.get('/', (req, res, next)=>{
@@ -34,9 +35,9 @@ app.get('/', (req, res, next)=>{
 })
 
 //Pass the global passport object into the configuaration function
-require('./middleware/passport')(passport);
+require('./middleware/passport')(alumniPassport);
 // This will initalize the passport object on every request
-app.use(passport.initialize())
+app.use(alumniPassport.initialize())
 
 // catch 404 errors and forward them to error handler functions
 app.use((req, res, next)=>{

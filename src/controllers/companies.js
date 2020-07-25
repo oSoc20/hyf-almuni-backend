@@ -4,10 +4,13 @@ const utils = require('../lib/utils');
 module.exports = {
     index: async(req, res, next)=>{
         const company = await Company.find({})
-        res.status(200).json({success:`welcome to the hackyour future platform`})
+        res.status(200).json({success:true, company})
     },
 
     registerCompany: async(req, res, next)=>{
+        if(req.body.password === undefined){
+            return res.status(401).json({success:false, error:`password could not be blank`});
+        }
         const saltHash = utils.genPassword(req.body.password);
         const salt = saltHash.salt;
         const hash = saltHash.hash;
