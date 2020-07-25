@@ -11,15 +11,17 @@ module.exports = {
         //1. find the alumni
         const student = await Alumni.findById(req.body.student);
         //2. create a new media
-        const newMedia = req.body;
+        // const newMedia = req.body;
+        // console.log(`newedia`,newMedia);
         // we don't need the req.body.student becouse it's main purpuse is to find the alumni
-        delete newMedia.student;
-        const media = new Media(newMedia)
-        media.student = student;
+        // delete newMedia.student;
+        const media = new Media(req.body)
+        // media.student = student;
         await media.save();
         // 3. add the newly created media to the acutal student(alumni)
         student.media.push(media);
         await student.save();
+        console.log(student)
         res.status(201).json({media})
     },
 
@@ -32,7 +34,7 @@ module.exports = {
     updateMedium: async (req, res, next)=>{
         const {mediaId} = req.params;
         const newMedia = req.body;
-        const result = await Media.findOneAndUpdate(mediaId, newMedia)
+        const result = await Media.findByIdAndUpdate(mediaId, newMedia)
         res.status(200).json({success:true})
     },
 

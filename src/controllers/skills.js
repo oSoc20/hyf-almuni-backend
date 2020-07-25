@@ -11,11 +11,11 @@ module.exports = {
         //1.find the acutal student(alumni)
         const student = await Alumni.findById(req.body.student);
         // 2. create a new skill
-        const newSkill = req.body
+        // const newSkill = req.body
         // we don't need the req.body.student becouse it's main purpuse is to find the alumni
-        delete newSkill.student
-        const skill = new Skill(newSkill)
-        skill.student = student;
+        // delete newSkill.student
+        const skill = new Skill(req.body)
+        // skill.student = student;
         await skill.save();
         // 3. add the newly created skill to the acutal student(alumni)
         student.skills.push(skill)

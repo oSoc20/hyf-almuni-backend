@@ -2,23 +2,30 @@
 // const router = express.Router();
 const router = require('express-promise-router')()
 const AlumniControllers = require('../controllers/alumnus')
-const passport = require('passport');
+const alumniPassport = require('passport');
+const companyPassport = require('passport');
 
 //Pass the global passport object into the configuaration function
-require('../middleware/passport')(passport);
-const auth = passport.authenticate('jwt', {session: false})
+require('../middleware/passport')(alumniPassport);
+require('../middleware/passport')(companyPassport);
+const alumniAuth = alumniPassport.authenticate('alumni-rule', {session: false})
+const companyAuth = companyPassport.authenticate('company-rule', {session: false})
 
 router.route('/')
-      .get(auth, AlumniControllers.index)
+      .get(companyAuth, AlumniControllers.index)
 router.route('/register')
       .post(AlumniControllers.registerAlumni)
 router.route('/login')
       .post(AlumniControllers.loginAlumni)
 router.route('/:alumniId')
-      .get(auth, AlumniControllers.getAlumni)
-      .patch(auth, AlumniControllers.updateAlumni)
+      .get(alumniAuth, AlumniControllers.getAlumni)
+      .patch(alumniAuth, AlumniControllers.updateAlumni)
 router.route('/:alumniId/skill')
-      .post(auth, AlumniControllers.createAlumniSkill)
-      .get(auth, AlumniControllers.getAlumniSkills)
+      .get( AlumniControllers.getAlumniSkills)
+//       .post( AlumniControllers.createAlumniSkill)
+router.route('/:alumniId/language')
+      .get( AlumniControllers.getAlumniLanguages)
+router.route('/:alumniId/media')
+      .get( AlumniControllers.getAlumniMedia)
 
 module.exports = router;
