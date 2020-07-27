@@ -27,5 +27,9 @@ router.route('/:alumniId/language')
       .get( AlumniControllers.getAlumniLanguages)
 router.route('/:alumniId/media')
       .get( AlumniControllers.getAlumniMedia)
+router.route('/:alumniId/image')
+      .get( AlumniControllers.getAlumniPicture)
+router.route('/:alumniId/cv')
+      .get( AlumniControllers.getAlumniCv)
 
 module.exports = router;

@@ -15,6 +15,8 @@ const skills = require('./routes/skills')
 const languages = require('./routes/lanugages')
 const media = require('./routes/media')
 const company = require('./routes/companies');
+const alumniPicture = require('./routes/alumni-profile-pictures')
+const cv = require('./routes/cv')
 
 // middlewares
 app.use(express.json());
@@ -29,6 +31,8 @@ app.use('/skill',auth, skills)
 app.use('/language',auth, languages)
 app.use('/media', auth,media)
 app.use('/company', company)
+app.use('/image', alumniPicture)
+app.use('/cv', cv)
 
 app.get('/', (req, res, next)=>{
   res.send('Server is Up and runnig')

@@ -21,7 +21,6 @@ module.exports = {
         // 3. add the newly created media to the acutal student(alumni)
         student.media.push(media);
         await student.save();
-        console.log(student)
         res.status(201).json({media})
     },
 
@@ -38,7 +37,7 @@ module.exports = {
         res.status(200).json({success:true})
     },
 
-    deleteMedium: async (req, res) => {
+    deleteMedium: async (req, res, next) => {
         const {mediaId} = req.params;
         const media = await Media.findById(mediaId);
         if(!media){

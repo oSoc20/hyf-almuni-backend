@@ -5,7 +5,12 @@ const Language = require('../models/language')
 
 module.exports = {
     index: async (req, res, next)=>{
-        const alumni = await Alumni.find({}).populate('languages').populate('skills').populate('media');
+        const alumni = await Alumni.find({})
+        .populate('languages')
+        .populate('skills')
+        .populate('media')
+        .populate('cv')
+        .populate('picture');
         res.status(200).json({alumni})
     },
 
@@ -43,7 +48,12 @@ module.exports = {
 
     getAlumni: async(req, res, next)=>{
         const { alumniId } = req.params;
-        const alumni = await Alumni.findById(alumniId).populate('languages').populate('skills').populate('media');
+        const alumni = await Alumni.findById(alumniId)
+        .populate('languages')
+        .populate('skills')
+        .populate('media')
+        .populate('cv')
+        .populate('picture')
         res.status(200).json({success: true, alumni})      
     },
 
@@ -106,5 +116,17 @@ module.exports = {
         const {alumniId} = req.params;
         const alumni = await Alumni.findById(alumniId).populate('media')
         res.status(200).json(alumni.media)
+    },
+
+    getAlumniPicture: async (req, res, next)=>{
+        const {alumniId} = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('picture')
+        res.status(200).json(alumni.profileImage)
+    },
+
+    getAlumniCv: async (req, res, next)=>{
+        const {alumniId} = req.params;
+        const alumni = await Alumni.findById(alumniId).populate('cv')
+        res.status(200).json(alumni.cv)
     }
 }

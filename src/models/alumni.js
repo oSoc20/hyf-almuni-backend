@@ -7,9 +7,15 @@ const  alumniSchema= new Schema({
   email: { type: String, required: true, unique: true, lowercase: true },
   hash: String,
   salt: String,
-  cv:String,
   about: String,
-  profileImage:String,
+  cv:[{
+    type:Schema.Types.ObjectId,
+    ref:'cv'
+  }],
+  profileImage: [{
+    type:Schema.Types.ObjectId,
+    ref:'alumni-profile-picture'
+  }],
   userType: { type: String, default:'alumni' },
   isActive: { type: Boolean, default:true },
   registeredDate: { type: Date, required: true, default : Date.now },
